@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn Something | Dhruv Kamath</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fffcf7;
+      --surface: #ffffff;
+      --text: #1c1917;
+      --muted: #78716c;
+      --accent: #ea580c;
+      --accent-soft: #fff7ed;
+      --border: #e7e5e4;
+      --highlight: #fef3c7;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Newsreader', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.8;
+      font-size: 18px;
+    }
+    
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+    
+    /* Top bar */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255,252,247,0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+    
+    .logo {
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+    
+    .top-nav {
+      display: flex;
+      gap: 24px;
+    }
+    
+    .top-nav a {
+      font-size: 14px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    
+    .top-nav a:hover {
+      color: var(--text);
+    }
+    
+    /* Lesson header */
+    .lesson-meta {
+      margin-bottom: 40px;
+    }
+    
+    .lesson-tag {
+      display: inline-block;
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 6px 12px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+    
+    h1 {
+      font-size: 42px;
+      font-weight: 500;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    
+    .lesson-subtitle {
+      font-size: 20px;
+      color: var(--muted);
+      font-style: italic;
+    }
+    
+    .reading-time {
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    
+    /* Content */
+    .content p {
+      margin-bottom: 24px;
+    }
+    
+    .content strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+    
+    .content em {
+      font-style: italic;
+    }
+    
+    .highlight {
+      background: var(--highlight);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    
+    /* Callout box */
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      padding: 24px 28px;
+      margin: 40px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .callout-title {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 8px;
+      color: var(--accent);
+    }
+    
+    .callout p {
+      margin: 0;
+      font-size: 16px;
+    }
+    
+    /* Diagram */
+    .diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px;
+      margin: 48px 0;
+      text-align: center;
+    }
+    
+    .diagram-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 20px;
+    }
+    
+    .diagram-box {
+      padding: 16px 24px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: 14px;
+    }
+    
+    .diagram-box.bad {
+      border-color: #fca5a5;
+      background: #fef2f2;
+    }
+    
+    .diagram-box.good {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+    
+    .diagram-arrow {
+      font-size: 24px;
+      color: var(--muted);
+    }
+    
+    .diagram-caption {
+      font-size: 14px;
+      color: var(--muted);
+      font-style: italic;
+    }
+    
+    /* Interactive slider */
+    .interactive {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin: 48px 0;
+    }
+    
+    .interactive-title {
+      font-weight: 600;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .interactive-title::before {
+      content: '⚡';
+    }
+    
+    .slider-container {
+      margin-bottom: 24px;
+    }
+    
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    
+    .slider {
+      width: 100%;
+      height: 8px;
+      -webkit-appearance: none;
+      background: var(--border);
+      border-radius: 4px;
+      outline: none;
+    }
+    
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      background: var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(234,88,12,0.3);
+    }
+    
+    .slider-output {
+      background: var(--bg);
+      padding: 16px 20px;
+      border-radius: 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: 14px;
+      text-align: center;
+    }
+    
+    .slider-output strong {
+      color: var(--accent);
+    }
+    
+    /* Examples section */
+    .examples {
+      margin: 60px 0;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    
+    .examples h2 {
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+    
+    .example-cards {
+      display: grid;
+      gap: 20px;
+    }
+    
+    .example-card {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 20px;
+      padding: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .example-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+    
+    .example-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--bg);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+    }
+    
+    .example-content h3 {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    
+    .example-content p {
+      font-size: 15px;
+      color: var(--muted);
+      margin: 0;
+    }
+    
+    .example-tag {
+      display: inline-block;
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      padding: 3px 8px;
+      background: var(--bg);
+      border-radius: 3px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+    
+    /* More lessons */
+    .more-lessons {
+      margin: 60px 0;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    
+    .more-lessons h2 {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+    
+    .lesson-list {
+      list-style: none;
+    }
+    
+    .lesson-list li {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .lesson-list a {
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: color 0.2s;
+    }
+    
+    .lesson-list a:hover {
+      color: var(--accent);
+    }
+    
+    .lesson-list .duration {
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    
+    /* Work with me */
+    .work-with-me {
+      background: var(--text);
+      color: var(--bg);
+      padding: 48px;
+      border-radius: 16px;
+      margin-top: 80px;
+      text-align: center;
+    }
+    
+    .work-with-me h2 {
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+    
+    .work-with-me p {
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 24px;
+      font-size: 16px;
+    }
+    
+    .work-with-me a {
+      display: inline-block;
+      padding: 14px 28px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: transform 0.2s;
+    }
+    
+    .work-with-me a:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-bar">
+    <div class="logo">DHRUV KAMATH</div>
+    <div class="top-nav">
+      <a href="#">Lessons</a>
+      <a href="#">Work</a>
+      <a href="#">About</a>
+    </div>
+  </nav>
+  
+  <main class="container">
+    <header class="lesson-meta">
+      <span class="lesson-tag">Lesson #1</span>
+      <h1>Why most dashboards fail</h1>
+      <p class="lesson-subtitle">And a simple framework to fix them</p>
+      <div class="reading-time">📖 90 seconds to read • 💡 1 concept to remember</div>
+    </header>
+    
+    <article class="content">
+      <p>
+        Most dashboards are built to <strong>show data</strong>. They should be built to <strong>enable decisions</strong>.
+      </p>
+      
+      <p>
+        The difference? A data-display dashboard asks <em>"what metrics exist?"</em> A decision-enabling dashboard asks <em>"what question is someone trying to answer?"</em>
+      </p>
+      
+      <div class="diagram">
+        <div class="diagram-flow">
+          <div class="diagram-box bad">12 metrics</div>
+          <div class="diagram-arrow">→</div>
+          <div class="diagram-box bad">Cognitive overload</div>
+          <div class="diagram-arrow">→</div>
+          <div class="diagram-box bad">No decision</div>
+        </div>
+        <div class="diagram-caption">The typical dashboard spiral</div>
+      </div>
+      
+      <p>
+        When I rebuilt Walmart's finance dashboards, we cut metrics from 12 to 3. <span class="highlight">Result: 3x faster decisions.</span>
+      </p>
+      
+      <p>
+        The instinct is to add more. More filters. More views. More data. But every addition is a decision the user has to make <em>before</em> they can make the decision they came for.
+      </p>
+      
+      <div class="callout">
+        <div class="callout-title">The test</div>
+        <p>Can someone use your dashboard without training? If not, the dashboard is the problem—not the user.</p>
+      </div>
+      
+      <p>
+        The best dashboards disappear. They deliver an answer and get out of the way. The user doesn't admire the interface—they make a decision and move on.
+      </p>
+      
+      <div class="diagram">
+        <div class="diagram-flow">
+          <div class="diagram-box good">1 question</div>
+          <div class="diagram-arrow">→</div>
+          <div class="diagram-box good">Clear answer</div>
+          <div class="diagram-arrow">→</div>
+          <div class="diagram-box good">Action taken</div>
+        </div>
+        <div class="diagram-caption">The decision-enabling model</div>
+      </div>
+      
+      <div class="interactive">
+        <div class="interactive-title">Try it yourself</div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Metrics shown</span>
+            <span id="metric-count">6</span>
+          </div>
+          <input type="range" class="slider" min="1" max="15" value="6" id="metric-slider">
+        </div>
+        <div class="slider-output" id="slider-output">
+          At <strong>6 metrics</strong>, users experience moderate cognitive load. Consider reducing to 3-4 for optimal decision velocity.
+        </div>
+      </div>
+    </article>
+    
+    <section class="examples">
+      <h2>This concept in my work</h2>
+      <div class="example-cards">
+        <div class="example-card">
+          <div class="example-icon">⚡</div>
+          <div class="example-content">
+            <h3>FDH GenAI Assistant</h3>
+            <p>Replaced a 12-metric dashboard with a conversational interface. Users ask questions, get answers.</p>
+            <span class="example-tag">3x faster insights</span>
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-icon">📊</div>
+          <div class="example-content">
+            <h3>Finance Executive View</h3>
+            <p>Cut the CFO dashboard from 3 pages to 1 screen. Focused on the 3 metrics that drive 80% of decisions.</p>
+            <span class="example-tag">10% spend reduction</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section class="more-lessons">
+      <h2>More lessons</h2>
+      <ul class="lesson-list">
+        <li><a href="#">A simple way to design better feedback loops <span class="duration">2 min</span></a></li>
+        <li><a href="#">The constraint that unlocks creativity <span class="duration">3 min</span></a></li>
+        <li><a href="#">Why "user-friendly" is the wrong goal <span class="duration">2 min</span></a></li>
+        <li><a href="#">A checklist for humane onboarding <span class="duration">4 min</span></a></li>
+        <li><a href="#">Second-order thinking for PMs <span class="duration">3 min</span></a></li>
+        <li><a href="#">How to run a useful design review <span class="duration">2 min</span></a></li>
+      </ul>
+    </section>
+    
+    <div class="work-with-me">
+      <h2>Like how I think?</h2>
+      <p>I'm a Senior PM building AI products at Walmart. Let's talk.</p>
+      <a href="mailto:dhruv@example.com">Get in touch →</a>
+    </div>
+  </main>
+  
+  <script>
+    const slider = document.getElementById('metric-slider');
+    const count = document.getElementById('metric-count');
+    const output = document.getElementById('slider-output');
+    
+    const messages = {
+      low: 'At <strong>$n metrics</strong>, users can make quick, confident decisions. This is the sweet spot.',
+      medium: 'At <strong>$n metrics</strong>, users experience moderate cognitive load. Consider reducing to 3-4 for optimal decision velocity.',
+      high: 'At <strong>$n metrics</strong>, users face significant cognitive overload. Most will give up or make poor decisions.'
+    };
+    
+    slider.addEventListener('input', function() {
+      const val = parseInt(this.value);
+      count.textContent = val;
+      
+      let msg;
+      if (val <= 4) {
+        msg = messages.low.replace('$n', val);
+      } else if (val <= 8) {
+        msg = messages.medium.replace('$n', val);
+      } else {
+        msg = messages.high.replace('$n', val);
+      }
+      output.innerHTML = msg;
+    });
+  </script>
+</body>
+</html>
+

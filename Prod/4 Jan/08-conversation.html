@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Let's Talk | Dhruv Kamath</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #6366f1;
+      --primary-soft: #eef2ff;
+      --border: #e2e8f0;
+      --user-bubble: #6366f1;
+      --bot-bubble: #ffffff;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 320px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .sidebar-header {
+      margin-bottom: 40px;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+    
+    .logo-sub {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    
+    .suggested-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    
+    .suggested-list {
+      list-style: none;
+      flex: 1;
+    }
+    
+    .suggested-item {
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      color: var(--text);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    
+    .suggested-item:hover {
+      background: var(--primary-soft);
+    }
+    
+    .suggested-item.active {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .suggested-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    
+    .answer-style {
+      margin-top: auto;
+      padding: 20px;
+      background: var(--bg);
+      border-radius: 12px;
+    }
+    
+    .answer-style-title {
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: var(--muted);
+    }
+    
+    .style-toggle {
+      display: flex;
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 4px;
+    }
+    
+    .style-btn {
+      flex: 1;
+      padding: 8px 16px;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      border-radius: 6px;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+    
+    .style-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+    
+    /* Main chat area */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 800px;
+    }
+    
+    .chat-header {
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    
+    .chat-title {
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    .chat-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    
+    .chat-messages {
+      flex: 1;
+      padding: 32px;
+      overflow-y: auto;
+    }
+    
+    .message {
+      margin-bottom: 24px;
+      display: flex;
+      gap: 16px;
+      animation: fadeIn 0.4s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .message-user {
+      flex-direction: row-reverse;
+    }
+    
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    
+    .avatar-bot {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .avatar-user {
+      background: var(--border);
+      color: var(--muted);
+    }
+    
+    .bubble {
+      max-width: 520px;
+      padding: 16px 20px;
+      border-radius: 20px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    
+    .bubble-bot {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top-left-radius: 4px;
+    }
+    
+    .bubble-user {
+      background: var(--primary);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    
+    .bubble p {
+      margin-bottom: 12px;
+    }
+    
+    .bubble p:last-child {
+      margin-bottom: 0;
+    }
+    
+    .bubble strong {
+      font-weight: 600;
+    }
+    
+    .bubble-highlight {
+      background: var(--primary-soft);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+    
+    .bubble-cards {
+      display: grid;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    
+    .bubble-card {
+      padding: 12px 16px;
+      background: var(--bg);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+    
+    .bubble-card:hover {
+      background: var(--primary-soft);
+    }
+    
+    .bubble-card-title {
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    
+    .bubble-card-meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    
+    /* Input area */
+    .chat-input {
+      padding: 24px 32px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+    
+    .input-container {
+      display: flex;
+      gap: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 16px;
+      transition: all 0.2s;
+    }
+    
+    .input-container:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-soft);
+    }
+    
+    .input-field {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 15px;
+      outline: none;
+    }
+    
+    .input-field::placeholder {
+      color: var(--muted);
+    }
+    
+    .send-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: var(--primary);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    
+    .send-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Search results */
+    .search-hint {
+      padding: 12px 16px;
+      background: var(--primary-soft);
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--primary);
+      margin-top: 12px;
+    }
+    
+    .search-hint strong {
+      font-weight: 600;
+    }
+    
+    /* Typing indicator */
+    .typing {
+      display: flex;
+      gap: 4px;
+      padding: 8px 0;
+    }
+    
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--muted);
+      border-radius: 50%;
+      animation: bounce 1.4s ease-in-out infinite;
+    }
+    
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-8px); }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1 class="logo">Dhruv Kamath</h1>
+      <p class="logo-sub">Product Manager</p>
+    </div>
+    
+    <p class="suggested-title">Ask me about...</p>
+    <ul class="suggested-list">
+      <li class="suggested-item active" onclick="askQuestion(0)">
+        <span class="suggested-icon">🔄</span>
+        <span>A project where I changed my mind</span>
+      </li>
+      <li class="suggested-item" onclick="askQuestion(1)">
+        <span class="suggested-icon">💡</span>
+        <span>Something I'm obsessed with</span>
+      </li>
+      <li class="suggested-item" onclick="askQuestion(2)">
+        <span class="suggested-icon">📚</span>
+        <span>A concept more people should know</span>
+      </li>
+      <li class="suggested-item" onclick="askQuestion(3)">
+        <span class="suggested-icon">⚡</span>
+        <span>My biggest product lesson</span>
+      </li>
+      <li class="suggested-item" onclick="askQuestion(4)">
+        <span class="suggested-icon">🎯</span>
+        <span>How I approach ambiguity</span>
+      </li>
+      <li class="suggested-item" onclick="askQuestion(5)">
+        <span class="suggested-icon">🤝</span>
+        <span>What I'm looking for next</span>
+      </li>
+    </ul>
+    
+    <div class="answer-style">
+      <p class="answer-style-title">Answer style</p>
+      <div class="style-toggle">
+        <button class="style-btn active">Concise</button>
+        <button class="style-btn">Detailed</button>
+      </div>
+    </div>
+  </aside>
+  
+  <main class="main">
+    <header class="chat-header">
+      <h2 class="chat-title">Let's have a conversation</h2>
+      <p class="chat-subtitle">Ask me anything about my work, thinking, or experience</p>
+    </header>
+    
+    <div class="chat-messages" id="chat">
+      <div class="message">
+        <div class="avatar avatar-bot">D</div>
+        <div class="bubble bubble-bot">
+          <p>Hey! I'm Dhruv. I build AI products at Walmart.</p>
+          <p>This isn't a typical portfolio—it's a conversation. Ask me anything, or pick a question from the sidebar to get started.</p>
+          <p>What would you like to know?</p>
+        </div>
+      </div>
+      
+      <div class="message message-user">
+        <div class="avatar avatar-user">Y</div>
+        <div class="bubble bubble-user">
+          Tell me about a project where you changed your mind
+        </div>
+      </div>
+      
+      <div class="message">
+        <div class="avatar avatar-bot">D</div>
+        <div class="bubble bubble-bot">
+          <p>Great question. The <strong>FDH GenAI Assistant</strong> project completely changed how I think about dashboards.</p>
+          
+          <div class="bubble-highlight">
+            <strong>What I believed:</strong> More data = better decisions<br>
+            <strong>What I learned:</strong> Less data, better presented = faster decisions
+          </div>
+          
+          <p>We started by building a comprehensive dashboard with 12 metrics. Usage was terrible. Executives would open it, scroll around, and leave without acting.</p>
+          
+          <p>The breakthrough came when we watched users. They weren't "exploring data"—they had a specific question and wanted an answer. So we replaced the dashboard with a conversational interface.</p>
+          
+          <p><strong>Result:</strong> 3x faster time-to-insight. Less UI, more impact.</p>
+          
+          <div class="bubble-cards">
+            <div class="bubble-card">
+              <div class="bubble-card-title">→ See FDH project details</div>
+              <div class="bubble-card-meta">Enterprise AI • $130B data platform</div>
+            </div>
+            <div class="bubble-card">
+              <div class="bubble-card-title">→ Read: Why dashboards fail</div>
+              <div class="bubble-card-meta">Lesson • 90 second read</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="chat-input">
+      <div class="input-container">
+        <input type="text" class="input-field" placeholder="Type your question..." id="input">
+        <button class="send-btn" onclick="sendMessage()">→</button>
+      </div>
+      <div class="search-hint">
+        <strong>Tip:</strong> Try "How do you think about constraints?" or "What's your process?"
+      </div>
+    </div>
+  </main>
+  
+  <script>
+    const questions = [
+      "Tell me about a project where you changed your mind",
+      "Show me something you're obsessed with",
+      "Teach me a concept you think more people should know",
+      "What's your biggest product lesson?",
+      "How do you approach ambiguity?",
+      "What are you looking for next?"
+    ];
+    
+    const answers = [
+      // Already shown in HTML
+      `<p>I'm genuinely obsessed with <strong>decision velocity</strong>—how fast organizations move from data to action.</p>
+      <p>Most tools optimize for data access. But the bottleneck is never access—it's interpretation. The gap between "here's the data" and "here's what to do" is where most value is lost.</p>
+      <p>At Walmart, we found that executives spent 80% of their "data time" formatting, not deciding. That insight shaped everything I've built since.</p>`,
+      
+      `<p><strong>Second-order thinking.</strong> It's the idea that consequences have consequences.</p>
+      <div class="bubble-highlight">
+        First-order: "This feature will increase engagement"<br>
+        Second-order: "...which might create notification fatigue, reducing trust"
+      </div>
+      <p>Most product decisions optimize for first-order effects. The best ones anticipate the second. It's not about being pessimistic—it's about being complete.</p>`,
+      
+      `<p><strong>Ship to learn, not to impress.</strong></p>
+      <p>Early in my career, I spent months perfecting features before shipping. The result? Polished things nobody wanted.</p>
+      <p>Now I ship the smallest version that tests the riskiest assumption. It's uncomfortable. The thing looks unfinished. But you learn 10x faster.</p>`,
+      
+      `<p>When something is ambiguous, I do three things:</p>
+      <p><strong>1. Find the contradictions.</strong> Interview stakeholders separately. Where they disagree is where the real problem lives.</p>
+      <p><strong>2. Force a choice.</strong> Present 3 directions with clear trade-offs. "Do everything" isn't a strategy.</p>
+      <p><strong>3. Prototype the risk.</strong> Build the smallest thing that tests the assumption most likely to kill the project.</p>`,
+      
+      `<p>I'm looking for a role where I can:</p>
+      <p>• Build AI products that <strong>reduce user effort</strong>, not add to it</p>
+      <p>• Work with a team that values <strong>shipping over perfecting</strong></p>
+      <p>• Have ownership over <strong>end-to-end product decisions</strong></p>
+      <p>I thrive in ambiguous environments where there's room to define the problem, not just solve it.</p>
+      <div class="bubble-cards">
+        <div class="bubble-card">
+          <div class="bubble-card-title">→ Email me</div>
+          <div class="bubble-card-meta">dhruv@example.com</div>
+        </div>
+      </div>`
+    ];
+    
+    function askQuestion(index) {
+      document.querySelectorAll('.suggested-item').forEach((item, i) => {
+        item.classList.toggle('active', i === index);
+      });
+      
+      if (index > 0) { // Skip first one, it's already shown
+        const chat = document.getElementById('chat');
+        
+        // Add user message
+        chat.innerHTML += `
+          <div class="message message-user">
+            <div class="avatar avatar-user">Y</div>
+            <div class="bubble bubble-user">${questions[index]}</div>
+          </div>
+        `;
+        
+        // Add typing indicator
+        chat.innerHTML += `
+          <div class="message" id="typing">
+            <div class="avatar avatar-bot">D</div>
+            <div class="bubble bubble-bot">
+              <div class="typing">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        chat.scrollTop = chat.scrollHeight;
+        
+        // Replace with answer after delay
+        setTimeout(() => {
+          document.getElementById('typing').remove();
+          chat.innerHTML += `
+            <div class="message">
+              <div class="avatar avatar-bot">D</div>
+              <div class="bubble bubble-bot">${answers[index]}</div>
+            </div>
+          `;
+          chat.scrollTop = chat.scrollHeight;
+        }, 1500);
+      }
+    }
+    
+    function sendMessage() {
+      const input = document.getElementById('input');
+      const text = input.value.trim();
+      if (!text) return;
+      
+      const chat = document.getElementById('chat');
+      chat.innerHTML += `
+        <div class="message message-user">
+          <div class="avatar avatar-user">Y</div>
+          <div class="bubble bubble-user">${text}</div>
+        </div>
+      `;
+      
+      input.value = '';
+      
+      // Add typing then generic response
+      chat.innerHTML += `
+        <div class="message" id="typing">
+          <div class="avatar avatar-bot">D</div>
+          <div class="bubble bubble-bot">
+            <div class="typing">
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      chat.scrollTop = chat.scrollHeight;
+      
+      setTimeout(() => {
+        document.getElementById('typing').remove();
+        chat.innerHTML += `
+          <div class="message">
+            <div class="avatar avatar-bot">D</div>
+            <div class="bubble bubble-bot">
+              <p>That's a great question! In a full implementation, I'd have responses for common topics like my work, process, and thinking.</p>
+              <p>For now, try one of the suggested questions in the sidebar, or reach out directly at <strong>dhruv@example.com</strong>.</p>
+            </div>
+          </div>
+        `;
+        chat.scrollTop = chat.scrollHeight;
+      }, 1500);
+    }
+    
+    document.getElementById('input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+    
+    document.querySelectorAll('.style-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
+

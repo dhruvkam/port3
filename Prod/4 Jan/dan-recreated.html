@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daniel Oren | Product Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Calibre:wght@400;500;600&family=SF+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --dark-navy: #020c1b;
+      --navy: #0a192f;
+      --light-navy: #112240;
+      --lightest-navy: #233554;
+      --navy-shadow: rgba(2,12,27,0.7);
+      --dark-slate: #495670;
+      --slate: #8892b0;
+      --light-slate: #a8b2d1;
+      --lightest-slate: #ccd6f6;
+      --white: #e6f1ff;
+      --green: #64ffda;
+      --green-tint: rgba(100,255,218,0.1);
+      --pink: #f57dff;
+      --blue: #57cbff;
+      
+      --font-sans: 'Inter', 'San Francisco', 'SF Pro Text', -apple-system, system-ui, sans-serif;
+      --font-mono: 'Fira Code', 'SF Mono', 'Fira Mono', 'Roboto Mono', monospace;
+      
+      --fz-xxs: 12px;
+      --fz-xs: 13px;
+      --fz-sm: 14px;
+      --fz-md: 16px;
+      --fz-lg: 18px;
+      --fz-xl: 20px;
+      --fz-xxl: 22px;
+      --fz-heading: 32px;
+      
+      --border-radius: 4px;
+      --nav-height: 100px;
+      --nav-scroll-height: 70px;
+      
+      --tab-height: 42px;
+      --tab-width: 120px;
+      
+      --easing: cubic-bezier(0.645, 0.045, 0.355, 1);
+      --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--navy);
+      color: var(--slate);
+      font-size: var(--fz-xl);
+      line-height: 1.3;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    ::selection {
+      background-color: var(--lightest-navy);
+      color: var(--lightest-slate);
+    }
+    
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    
+    /* Header / Nav */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      z-index: 11;
+      padding: 0px 50px;
+      width: 100%;
+      height: var(--nav-height);
+      background-color: rgba(10, 25, 47, 0.85);
+      backdrop-filter: blur(10px);
+      transition: var(--transition);
+    }
+    
+    .logo a {
+      display: block;
+      color: var(--green);
+      width: 42px;
+      height: 42px;
+    }
+    
+    .logo svg {
+      fill: none;
+      transition: var(--transition);
+    }
+    
+    .logo a:hover svg {
+      fill: var(--green-tint);
+    }
+    
+    nav {
+      display: flex;
+      align-items: center;
+    }
+    
+    nav ol {
+      display: flex;
+      list-style: none;
+      gap: 5px;
+    }
+    
+    nav ol li {
+      counter-increment: item 1;
+    }
+    
+    nav ol li a {
+      padding: 10px;
+      font-family: var(--font-mono);
+      font-size: var(--fz-xs);
+      color: var(--lightest-slate);
+      transition: var(--transition);
+    }
+    
+    nav ol li a:hover {
+      color: var(--green);
+    }
+    
+    nav ol li a::before {
+      content: "0" counter(item) ".";
+      margin-right: 5px;
+      color: var(--green);
+      font-size: var(--fz-xxs);
+    }
+    
+    .resume-button {
+      color: var(--green);
+      background-color: transparent;
+      border: 1px solid var(--green);
+      border-radius: var(--border-radius);
+      padding: 0.75rem 1rem;
+      font-family: var(--font-mono);
+      font-size: var(--fz-xs);
+      line-height: 1;
+      cursor: pointer;
+      margin-left: 15px;
+      transition: var(--transition);
+    }
+    
+    .resume-button:hover {
+      background-color: var(--green-tint);
+    }
+    
+    /* Side elements */
+    .side-element {
+      width: 40px;
+      position: fixed;
+      bottom: 0;
+      z-index: 10;
+    }
+    
+    .side-element.left {
+      left: 40px;
+    }
+    
+    .side-element.right {
+      right: 40px;
+    }
+    
+    .side-element::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 90px;
+      margin: 0 auto;
+      background-color: var(--light-slate);
+    }
+    
+    .social-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      list-style: none;
+      gap: 5px;
+    }
+    
+    .social-list li a {
+      padding: 10px;
+      display: block;
+      color: var(--light-slate);
+      transition: var(--transition);
+    }
+    
+    .social-list li a:hover {
+      color: var(--green);
+      transform: translateY(-3px);
+    }
+    
+    .social-list li a svg {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .email-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: var(--fz-xxs);
+      letter-spacing: 0.1em;
+      writing-mode: vertical-rl;
+    }
+    
+    .email-link a {
+      color: var(--light-slate);
+      padding: 10px;
+      transition: var(--transition);
+    }
+    
+    .email-link a:hover {
+      color: var(--green);
+      transform: translateY(-3px);
+    }
+    
+    /* Main content */
+    main {
+      padding: 0 150px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    
+    section {
+      margin: 0 auto;
+      padding: 100px 0;
+      max-width: 1000px;
+    }
+    
+    /* Hero section */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 0;
+    }
+    
+    .hero h1 {
+      margin: 0 0 30px 4px;
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: clamp(var(--fz-sm), 5vw, var(--fz-md));
+      font-weight: 400;
+    }
+    
+    .hero .big-heading {
+      margin: 0;
+      font-size: clamp(40px, 8vw, 80px);
+      font-weight: 600;
+      color: var(--lightest-slate);
+      line-height: 1.1;
+    }
+    
+    .hero .sub-heading {
+      margin-top: 10px;
+      color: var(--slate);
+      line-height: 0.9;
+    }
+    
+    .hero .sub-heading a {
+      color: var(--green);
+      cursor: default;
+    }
+    
+    .hero p {
+      margin: 20px 0 0;
+      max-width: 540px;
+      font-size: var(--fz-lg);
+      line-height: 1.6;
+    }
+    
+    .hero .email-cta {
+      color: var(--green);
+      background-color: transparent;
+      border: 1px solid var(--green);
+      border-radius: var(--border-radius);
+      padding: 1.25rem 1.75rem;
+      font-family: var(--font-mono);
+      font-size: var(--fz-sm);
+      line-height: 1;
+      text-decoration: none;
+      margin-top: 50px;
+      transition: var(--transition);
+    }
+    
+    .hero .email-cta:hover {
+      background-color: var(--green-tint);
+    }
+    
+    /* Numbered headings */
+    .numbered-heading {
+      display: flex;
+      align-items: center;
+      position: relative;
+      margin: 10px 0 40px;
+      width: 100%;
+      font-size: clamp(26px, 5vw, var(--fz-heading));
+      font-weight: 600;
+      color: var(--lightest-slate);
+      white-space: nowrap;
+    }
+    
+    .numbered-heading::before {
+      position: relative;
+      bottom: 4px;
+      counter-increment: section 1;
+      content: "0" counter(section) ".";
+      margin-right: 10px;
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: clamp(var(--fz-md), 3vw, var(--fz-xl));
+      font-weight: 400;
+    }
+    
+    .numbered-heading::after {
+      content: "";
+      display: block;
+      position: relative;
+      top: -5px;
+      width: 300px;
+      height: 1px;
+      margin-left: 20px;
+      background-color: var(--lightest-navy);
+    }
+    
+    /* About section */
+    .about {
+      counter-reset: section 0;
+    }
+    
+    .about .inner {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 50px;
+    }
+    
+    .about p {
+      margin-bottom: 15px;
+      font-size: var(--fz-lg);
+      line-height: 1.6;
+    }
+    
+    .about a {
+      color: var(--green);
+      transition: var(--transition);
+    }
+    
+    .about a:hover {
+      text-decoration: underline;
+    }
+    
+    .skills-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(140px, 200px));
+      gap: 0 10px;
+      padding: 0;
+      margin: 20px 0 0;
+      list-style: none;
+      overflow: hidden;
+    }
+    
+    .skills-list li {
+      position: relative;
+      margin-bottom: 10px;
+      padding-left: 20px;
+      font-family: var(--font-mono);
+      font-size: var(--fz-xs);
+    }
+    
+    .skills-list li::before {
+      content: "▹";
+      position: absolute;
+      left: 0;
+      color: var(--green);
+      font-size: var(--fz-sm);
+      line-height: 12px;
+    }
+    
+    .about-pic {
+      position: relative;
+      max-width: 300px;
+    }
+    
+    .about-pic .wrapper {
+      display: block;
+      position: relative;
+      width: 100%;
+      border-radius: var(--border-radius);
+      background-color: var(--green);
+    }
+    
+    .about-pic .wrapper::before,
+    .about-pic .wrapper::after {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+    }
+    
+    .about-pic .wrapper::before {
+      top: 0;
+      left: 0;
+      background-color: var(--navy);
+      mix-blend-mode: screen;
+    }
+    
+    .about-pic .wrapper::after {
+      border: 2px solid var(--green);
+      top: 20px;
+      left: 20px;
+      z-index: -1;
+    }
+    
+    .about-pic:hover .wrapper::after {
+      top: 15px;
+      left: 15px;
+    }
+    
+    .about-pic .img {
+      position: relative;
+      border-radius: var(--border-radius);
+      width: 100%;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, var(--green) 0%, var(--blue) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      filter: grayscale(100%) contrast(1);
+      transition: var(--transition);
+    }
+    
+    .about-pic:hover .img {
+      filter: none;
+    }
+    
+    /* Jobs section */
+    .jobs {
+      max-width: 700px;
+    }
+    
+    .jobs .inner {
+      display: flex;
+      min-height: 340px;
+    }
+    
+    .job-tabs {
+      position: relative;
+      z-index: 3;
+      width: max-content;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    
+    .job-tabs li {
+      display: block;
+    }
+    
+    .job-tab-button {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: var(--tab-height);
+      padding: 0 20px 2px;
+      border: none;
+      border-left: 2px solid var(--lightest-navy);
+      background-color: transparent;
+      color: var(--slate);
+      font-family: var(--font-mono);
+      font-size: var(--fz-xs);
+      text-align: left;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .job-tab-button:hover,
+    .job-tab-button:focus {
+      background-color: var(--light-navy);
+      color: var(--green);
+    }
+    
+    .job-tab-button.active {
+      color: var(--green);
+      border-left-color: var(--green);
+    }
+    
+    .job-content {
+      position: relative;
+      width: 100%;
+      margin-left: 20px;
+      display: none;
+    }
+    
+    .job-content.active {
+      display: block;
+    }
+    
+    .job-content h3 {
+      margin-bottom: 2px;
+      font-size: var(--fz-xxl);
+      font-weight: 500;
+      line-height: 1.3;
+      color: var(--lightest-slate);
+    }
+    
+    .job-content h3 .company {
+      color: var(--green);
+    }
+    
+    .job-content h3 .company a {
+      color: var(--green);
+      transition: var(--transition);
+    }
+    
+    .job-content h3 .company a:hover {
+      text-decoration: underline;
+    }
+    
+    .job-content .range {
+      margin-bottom: 25px;
+      color: var(--light-slate);
+      font-family: var(--font-mono);
+      font-size: var(--fz-xs);
+    }
+    
+    .job-content ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    
+    .job-content ul li {
+      position: relative;
+      padding-left: 30px;
+      margin-bottom: 10px;
+      font-size: var(--fz-lg);
+      line-height: 1.5;
+    }
+    
+    .job-content ul li::before {
+      content: "▹";
+      position: absolute;
+      left: 0;
+      color: var(--green);
+    }
+    
+    /* Projects section */
+    .featured-project {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(12, 1fr);
+      align-items: center;
+      margin-bottom: 100px;
+    }
+    
+    .featured-project:nth-of-type(odd) .project-content {
+      grid-column: 1 / 7;
+      text-align: left;
+    }
+    
+    .featured-project:nth-of-type(odd) .project-image {
+      grid-column: 6 / -1;
+    }
+    
+    .featured-project:nth-of-type(even) .project-content {
+      grid-column: 7 / -1;
+      text-align: right;
+    }
+    
+    .featured-project:nth-of-type(even) .project-image {
+      grid-column: 1 / 8;
+    }
+    
+    .featured-project:nth-of-type(even) .project-tech-list {
+      justify-content: flex-end;
+    }
+    
+    .project-content {
+      position: relative;
+      grid-row: 1 / -1;
+      z-index: 2;
+    }
+    
+    .project-overline {
+      margin: 10px 0;
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: var(--fz-xs);
+      font-weight: 400;
+    }
+    
+    .project-title {
+      color: var(--lightest-slate);
+      font-size: clamp(24px, 5vw, 28px);
+      margin-bottom: 20px;
+    }
+    
+    .project-title a {
+      color: inherit;
+      transition: var(--transition);
+    }
+    
+    .project-title a:hover {
+      color: var(--green);
+    }
+    
+    .project-description {
+      position: relative;
+      z-index: 2;
+      padding: 25px;
+      border-radius: var(--border-radius);
+      background-color: var(--light-navy);
+      color: var(--light-slate);
+      font-size: var(--fz-lg);
+      line-height: 1.6;
+      box-shadow: 0 10px 30px -15px var(--navy-shadow);
+    }
+    
+    .project-tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+      margin: 25px 0 10px;
+      padding: 0;
+      list-style: none;
+      gap: 15px;
+    }
+    
+    .project-tech-list li {
+      font-family: var(--font-mono);
+      font-size: var(--fz-xs);
+      color: var(--light-slate);
+      white-space: nowrap;
+    }
+    
+    .project-links {
+      display: flex;
+      align-items: center;
+      position: relative;
+      margin-top: 10px;
+      margin-left: -10px;
+    }
+    
+    .featured-project:nth-of-type(even) .project-links {
+      justify-content: flex-end;
+      margin-left: 0;
+      margin-right: -10px;
+    }
+    
+    .project-links a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      color: var(--lightest-slate);
+      transition: var(--transition);
+    }
+    
+    .project-links a:hover {
+      color: var(--green);
+    }
+    
+    .project-links a svg {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .project-image {
+      grid-row: 1 / -1;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .project-image a {
+      width: 100%;
+      height: 100%;
+      display: block;
+      position: relative;
+      z-index: 1;
+      background-color: var(--green);
+      border-radius: var(--border-radius);
+      vertical-align: middle;
+    }
+    
+    .project-image a::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
+      transition: var(--transition);
+      background-color: var(--navy);
+      mix-blend-mode: screen;
+    }
+    
+    .project-image a:hover::before {
+      background-color: transparent;
+    }
+    
+    .project-image .img {
+      border-radius: var(--border-radius);
+      width: 100%;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+      display: block;
+      background: linear-gradient(135deg, var(--light-navy) 0%, var(--lightest-navy) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      color: var(--green);
+      filter: grayscale(100%) contrast(1) brightness(90%);
+      transition: var(--transition);
+    }
+    
+    .project-image a:hover .img {
+      filter: none;
+    }
+    
+    /* Other projects grid */
+    .other-projects h2 {
+      font-size: clamp(24px, 5vw, var(--fz-heading));
+      text-align: center;
+      color: var(--lightest-slate);
+      margin-bottom: 10px;
+    }
+    
+    .archive-link {
+      display: block;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: var(--fz-sm);
+      color: var(--green);
+      margin-bottom: 50px;
+      transition: var(--transition);
+    }
+    
+    .archive-link:hover {
+      text-decoration: underline;
+    }
+    
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .project-card {
+      position: relative;
+      cursor: default;
+      transition: var(--transition);
+    }
+    
+    .project-card:hover {
+      transform: translateY(-7px);
+    }
+    
+    .project-inner {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      align-items: flex-start;
+      position: relative;
+      height: 100%;
+      padding: 2rem 1.75rem;
+      border-radius: var(--border-radius);
+      background-color: var(--light-navy);
+      transition: var(--transition);
+      box-shadow: 0 10px 30px -15px var(--navy-shadow);
+    }
+    
+    .project-card:hover .project-inner {
+      box-shadow: 0 20px 30px -15px var(--navy-shadow);
+    }
+    
+    .project-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 35px;
+    }
+    
+    .project-top .folder {
+      color: var(--green);
+    }
+    
+    .project-top .folder svg {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .project-card .project-title {
+      margin: 0 0 10px;
+      font-size: var(--fz-xxl);
+      color: var(--lightest-slate);
+    }
+    
+    .project-card .project-title a {
+      transition: var(--transition);
+    }
+    
+    .project-card .project-title a:hover {
+      color: var(--green);
+    }
+    
+    .project-card .project-description {
+      padding: 0;
+      background: transparent;
+      box-shadow: none;
+      color: var(--light-slate);
+      font-size: 17px;
+    }
+    
+    .project-card .project-tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 20px;
+    }
+    
+    /* Contact section */
+    .contact {
+      max-width: 600px;
+      text-align: center;
+      margin: 0 auto;
+      padding: 100px 0;
+    }
+    
+    .contact .overline {
+      display: block;
+      margin-bottom: 20px;
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: var(--fz-md);
+      font-weight: 400;
+    }
+    
+    .contact .overline::before {
+      content: "04.";
+      margin-right: 10px;
+    }
+    
+    .contact .title {
+      font-size: clamp(40px, 5vw, 60px);
+      color: var(--lightest-slate);
+      margin-bottom: 20px;
+    }
+    
+    .contact p {
+      margin-bottom: 50px;
+      line-height: 1.6;
+    }
+    
+    .contact .email-cta {
+      color: var(--green);
+      background-color: transparent;
+      border: 1px solid var(--green);
+      border-radius: var(--border-radius);
+      padding: 1.25rem 1.75rem;
+      font-family: var(--font-mono);
+      font-size: var(--fz-sm);
+      line-height: 1;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    
+    .contact .email-cta:hover {
+      background-color: var(--green-tint);
+    }
+    
+    /* Footer */
+    footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: auto;
+      min-height: 70px;
+      padding: 15px;
+      text-align: center;
+    }
+    
+    footer .social-links {
+      display: none;
+    }
+    
+    footer .credit {
+      color: var(--light-slate);
+      font-family: var(--font-mono);
+      font-size: var(--fz-xxs);
+      line-height: 1;
+    }
+    
+    footer .credit a {
+      color: var(--light-slate);
+      padding: 10px;
+      transition: var(--transition);
+    }
+    
+    footer .credit a:hover {
+      color: var(--green);
+    }
+    
+    /* Animations */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .fade-up {
+      animation: fadeUp 0.5s ease forwards;
+    }
+    
+    .delay-1 { animation-delay: 100ms; }
+    .delay-2 { animation-delay: 200ms; }
+    .delay-3 { animation-delay: 300ms; }
+    .delay-4 { animation-delay: 400ms; }
+    .delay-5 { animation-delay: 500ms; }
+    
+    /* Responsive */
+    @media (max-width: 1080px) {
+      main {
+        padding: 0 100px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      main {
+        padding: 0 50px;
+      }
+      
+      .side-element {
+        display: none;
+      }
+      
+      .about .inner {
+        display: block;
+      }
+      
+      .about-pic {
+        margin: 50px auto 0;
+        width: 70%;
+      }
+      
+      .featured-project {
+        display: block;
+      }
+      
+      .project-content,
+      .project-image {
+        grid-column: 1 / -1 !important;
+      }
+      
+      .project-image {
+        margin-top: 20px;
+      }
+      
+      .featured-project:nth-of-type(even) .project-content {
+        text-align: left;
+      }
+      
+      .featured-project:nth-of-type(even) .project-tech-list {
+        justify-content: flex-start;
+      }
+      
+      .featured-project:nth-of-type(even) .project-links {
+        justify-content: flex-start;
+        margin-left: -10px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      main {
+        padding: 0 25px;
+      }
+      
+      header {
+        padding: 0 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <a href="#" aria-label="home">
+        <svg width="42" height="42" viewBox="0 0 707 612" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8.66223 612C4.81279 612 2.40722 607.832 4.3326 604.499L349.17 7.49573C351.095 4.16354 355.905 4.16352 357.83 7.49571L702.667 604.499C704.593 607.833 702.187 612 698.338 612H8.66223ZM640.027 578.35C643.877 578.35 646.282 574.182 644.357 570.849L357.83 74.7965C355.905 71.4644 351.095 71.4643 349.17 74.7965L62.6433 570.849C60.7179 574.182 63.1235 578.35 66.9729 578.35H640.027Z" fill="#FBBF24"/>
+          <path d="M400.39 325.177C400.39 325.177 415.807 349.261 420.766 371.104C420.766 371.104 430.432 410.65 413.764 434.842C400.399 454.174 406.609 430.972 406.609 430.972C411.316 410.227 418.156 373.66 400.39 325.177Z" fill="#FBBF24"/>
+          <path d="M353.995 241C353.995 241 358.072 289.015 360.322 343.087C360.736 353.068 361.042 363.202 361.312 373.237C361.743 389.62 361.812 406.01 361.519 422.395C361.204 437.551 360.421 451.348 359.062 462.58C358.279 469.105 349.819 469.105 349.036 462.58C347.056 446.119 346.21 425.482 346.156 403.486C346.156 391.111 346.318 378.304 346.678 365.551C346.939 356.776 347.263 348.055 347.623 339.478C349.873 286.612 353.995 241 353.995 241Z" fill="#FBBF24"/>
+        </svg>
+      </a>
+    </div>
+    <nav>
+      <ol>
+        <li><a href="#about">About</a></li>
+        <li><a href="#jobs">Experience</a></li>
+        <li><a href="#projects">Work</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ol>
+      <a class="resume-button" href="#" target="_blank">Resume</a>
+    </nav>
+  </header>
+  
+  <div class="side-element left">
+    <ul class="social-list">
+      <li>
+        <a href="https://github.com/" aria-label="GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        </a>
+      </li>
+      <li>
+        <a href="https://twitter.com/" aria-label="Twitter">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+        </a>
+      </li>
+      <li>
+        <a href="https://linkedin.com/" aria-label="LinkedIn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+        </a>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="side-element right">
+    <div class="email-link">
+      <a href="mailto:contact@danielroren.com">contact@danielroren.com</a>
+    </div>
+  </div>
+  
+  <main>
+    <section class="hero">
+      <h1 class="fade-up delay-1">Hi, my name is</h1>
+      <h2 class="big-heading fade-up delay-2">Daniel Oren.</h2>
+      <h3 class="big-heading sub-heading fade-up delay-3">I create products that have an <a>impact</a>.</h3>
+      <p class="fade-up delay-4">I'm a product manager based in Tel-Aviv, focused on impact driving solutions and effective at running concept to deployment processes.</p>
+      <a href="mailto:contact@danielroren.com" class="email-cta fade-up delay-5">Get In Touch</a>
+    </section>
+    
+    <section id="about" class="about">
+      <h2 class="numbered-heading">About Me</h2>
+      <div class="inner">
+        <div class="about-text">
+          <p>Hi! My name is Daniel, I'm a Product Manager based in Tel-Aviv, Israel.</p>
+          <p>I have a passion for creating products with a real and positive value in both the business and environmental/social world, constantly thinking about improving the user needs with a deep focus on UX/UI. Analytical minded, able to take the big picture and break it down to make sure it meets the product development goals. Remarkably creative, entrepreneurial, and tech-savvy.</p>
+          <p>Shortly after graduating from <a href="https://www.idc.ac.il/en/pages/home.aspx">IDC Herzliya</a>, I decided to use code and technology to solve social and environmental problems.</p>
+          <p>Here are several technologies I have been working with lately:</p>
+          <ul class="skills-list">
+            <li>JavaScript (ES6+)</li>
+            <li>HTML & (S)CSS</li>
+            <li>React</li>
+            <li>Gatsbyjs</li>
+            <li>Flask</li>
+            <li>WordPress</li>
+          </ul>
+        </div>
+        <div class="about-pic">
+          <div class="wrapper">
+            <div class="img">👨‍💻</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="jobs" class="jobs">
+      <h2 class="numbered-heading">Where I've Worked</h2>
+      <div class="inner">
+        <ul class="job-tabs" role="tablist">
+          <li><button class="job-tab-button active" onclick="showJob(0)">DROP</button></li>
+          <li><button class="job-tab-button" onclick="showJob(1)">Box</button></li>
+          <li><button class="job-tab-button" onclick="showJob(2)">Machodog</button></li>
+        </ul>
+        
+        <div class="job-content active" id="job-0">
+          <h3><span>Freelance Product & Project Manager</span><span class="company">&nbsp;@&nbsp;<a href="#">DROP</a></span></h3>
+          <p class="range">2020 - Present</p>
+          <ul>
+            <li>Identified challenges for small businesses that did not have online presence and created digital services for them, providing local companies and start-ups the option to be digital.</li>
+            <li>Identified customers' needs, profiled customers, characterized solutions, and managed solution development from A to Z.</li>
+            <li>Recruited and managed freelancer professionals on a need basis.</li>
+            <li>Built and designed sophisticated eCommerce websites in record time.</li>
+            <li>Reached 20% increase in client sales within 3 months (via digital marketing on Facebook, Google, etc.).</li>
+          </ul>
+        </div>
+        
+        <div class="job-content" id="job-1">
+          <h3><span>Front-End Developer</span><span class="company">&nbsp;@&nbsp;<a href="#">Box</a></span></h3>
+          <p class="range">2019 - 2020</p>
+          <ul>
+            <li>Formed and managed a team of developers and designers on Upwork, enabling the company to meet its development schedule and monetary goals, while managing a budget.</li>
+            <li>Designed and developed the company's mobile website using JavaScript, PHP, HTML and CSS, increasing customer engagement and conversion.</li>
+          </ul>
+        </div>
+        
+        <div class="job-content" id="job-2">
+          <h3><span>Co-founder and Product Manager</span><span class="company">&nbsp;@&nbsp;<a href="#">Machodog</a></span></h3>
+          <p class="range">2016 - 2018</p>
+          <ul>
+            <li>Founded B2C service with a partner, from developing a business plan to managing the online product from conception to production, and after 6 months built mobile app and Shopify store, successfully launching an MVP.</li>
+            <li>Created product requirements and wireframes keeping in mind customer oriented UX/UI.</li>
+            <li>Performed competitor research and market overview to understand target market better.</li>
+            <li>Developed product characterization and strategy with relevant features to increase user behavior and engagement.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    
+    <section id="projects">
+      <h2 class="numbered-heading">Some Things I've Built</h2>
+      
+      <div class="featured-project">
+        <div class="project-content">
+          <p class="project-overline">Featured Project</p>
+          <h3 class="project-title"><a href="#">Malinuapet</a></h3>
+          <div class="project-description">
+            <p>A pet supplies store turned into an eCommerce site using an easy-to-use content management system for its owner to manage.</p>
+          </div>
+          <ul class="project-tech-list">
+            <li>Figma</li>
+            <li>PHP</li>
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>JS</li>
+            <li>WordPress</li>
+          </ul>
+          <div class="project-links">
+            <a href="#" aria-label="External Link">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+          </div>
+        </div>
+        <div class="project-image">
+          <a href="#">
+            <div class="img">🐾</div>
+          </a>
+        </div>
+      </div>
+      
+      <div class="featured-project">
+        <div class="project-content">
+          <p class="project-overline">Featured Project</p>
+          <h3 class="project-title"><a href="#">Upcapital.io</a></h3>
+          <div class="project-description">
+            <p>Build a finance startup landing page with flexible ACF at the back end to edit the content without altering the front-end design.</p>
+          </div>
+          <ul class="project-tech-list">
+            <li>Figma</li>
+            <li>PHP</li>
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>JS</li>
+            <li>WordPress</li>
+          </ul>
+          <div class="project-links">
+            <a href="#" aria-label="External Link">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+          </div>
+        </div>
+        <div class="project-image">
+          <a href="#">
+            <div class="img">📈</div>
+          </a>
+        </div>
+      </div>
+      
+      <div class="featured-project">
+        <div class="project-content">
+          <p class="project-overline">Featured Project</p>
+          <h3 class="project-title"><a href="#">Machodog</a></h3>
+          <div class="project-description">
+            <p>Machodog is a one-stop-shop for pet owners. Macho lets customers take better care of their pets. It makes it easy for them to access hand-picked products and services. We have built a platform comprising a Shopify store and native apps for IOS and Android.</p>
+          </div>
+          <ul class="project-tech-list">
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>JS</li>
+            <li>Shopify</li>
+          </ul>
+          <div class="project-links">
+            <a href="#" aria-label="External Link">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+          </div>
+        </div>
+        <div class="project-image">
+          <a href="#">
+            <div class="img">🐕</div>
+          </a>
+        </div>
+      </div>
+    </section>
+    
+    <section class="other-projects">
+      <h2>Other Noteworthy Projects</h2>
+      <a class="archive-link" href="#">view the archive</a>
+      
+      <ul class="projects-grid">
+        <li class="project-card">
+          <div class="project-inner">
+            <header>
+              <div class="project-top">
+                <div class="folder">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+              </div>
+              <h3 class="project-title"><a href="#">Bracha-Law firm</a></h3>
+              <div class="project-description">
+                <p>Deliver a landing page for Law office.</p>
+              </div>
+            </header>
+            <footer>
+              <ul class="project-tech-list">
+                <li>PHP</li>
+                <li>WordPress</li>
+                <li>CSS</li>
+                <li>JS</li>
+              </ul>
+            </footer>
+          </div>
+        </li>
+        
+        <li class="project-card">
+          <div class="project-inner">
+            <header>
+              <div class="project-top">
+                <div class="folder">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+              </div>
+              <h3 class="project-title"><a href="#">OTD-Production</a></h3>
+              <div class="project-description">
+                <p>Build a landing page for known Event-Production company</p>
+              </div>
+            </header>
+            <footer>
+              <ul class="project-tech-list">
+                <li>PHP</li>
+                <li>WordPress</li>
+                <li>CSS</li>
+                <li>JS</li>
+              </ul>
+            </footer>
+          </div>
+        </li>
+        
+        <li class="project-card">
+          <div class="project-inner">
+            <header>
+              <div class="project-top">
+                <div class="folder">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+              </div>
+              <h3 class="project-title"><a href="#">Chatbot</a></h3>
+              <div class="project-description">
+                <p>Build a chatbot that can provide weather information based on location.</p>
+              </div>
+            </header>
+            <footer>
+              <ul class="project-tech-list">
+                <li>Flask</li>
+                <li>Python</li>
+              </ul>
+            </footer>
+          </div>
+        </li>
+        
+        <li class="project-card">
+          <div class="project-inner">
+            <header>
+              <div class="project-top">
+                <div class="folder">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+              </div>
+              <h3 class="project-title"><a href="#">HogwartsCRM</a></h3>
+              <div class="project-description">
+                <p>Create a Hogwarts table in CRM as part of my studies in ITC.</p>
+              </div>
+            </header>
+            <footer>
+              <ul class="project-tech-list">
+                <li>Flask</li>
+                <li>Python</li>
+                <li>React.js</li>
+              </ul>
+            </footer>
+          </div>
+        </li>
+        
+        <li class="project-card">
+          <div class="project-inner">
+            <header>
+              <div class="project-top">
+                <div class="folder">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+              </div>
+              <h3 class="project-title"><a href="#">Minecraft</a></h3>
+              <div class="project-description">
+                <p>Create a Minecraft game as part of my studies in ITC.</p>
+              </div>
+            </header>
+            <footer>
+              <ul class="project-tech-list">
+                <li>JS</li>
+                <li>CSS</li>
+                <li>HTML5</li>
+              </ul>
+            </footer>
+          </div>
+        </li>
+        
+        <li class="project-card">
+          <div class="project-inner">
+            <header>
+              <div class="project-top">
+                <div class="folder">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+              </div>
+              <h3 class="project-title"><a href="#">Mytwitter</a></h3>
+              <div class="project-description">
+                <p>Create a Twitter platform as part of my studies in ITC course. Integrated user and server-side using React.js and Firebase.</p>
+              </div>
+            </header>
+            <footer>
+              <ul class="project-tech-list">
+                <li>React.js</li>
+                <li>Firebase</li>
+              </ul>
+            </footer>
+          </div>
+        </li>
+      </ul>
+    </section>
+    
+    <section id="contact" class="contact">
+      <h2 class="overline">What's Next?</h2>
+      <h2 class="title">Get In Touch</h2>
+      <p>I'm open to new opportunities.<br>Don't hesitate to reach out with any questions or comments you may have.</p>
+      <a class="email-cta" href="mailto:contact@danielroren.com">Say Hello</a>
+    </section>
+  </main>
+  
+  <footer>
+    <div class="credit">
+      <a href="#">Designed by DROP</a> & <a href="https://brittanychiang.com/">Built by BC</a>
+      <br>©Copyright 2021 DROP
+    </div>
+  </footer>
+  
+  <script>
+    function showJob(index) {
+      // Update tabs
+      document.querySelectorAll('.job-tab-button').forEach((btn, i) => {
+        btn.classList.toggle('active', i === index);
+      });
+      
+      // Update content
+      document.querySelectorAll('.job-content').forEach((content, i) => {
+        content.classList.toggle('active', i === index);
+      });
+    }
+  </script>
+</body>
+</html>
+

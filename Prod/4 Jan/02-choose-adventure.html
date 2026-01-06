@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose Your Path | Dhruv Kamath</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --border: #2a2a3a;
+      --text: #e8e8ed;
+      --muted: #8888a0;
+      --path-work: #ff6b4a;
+      --path-learn: #4ae0ff;
+      --path-think: #b44aff;
+      --path-build: #4aff91;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    /* Animated grid background */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 40px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .question {
+      font-size: clamp(32px, 6vw, 56px);
+      font-weight: 600;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    
+    .subtitle {
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 80px;
+      letter-spacing: 1px;
+    }
+    
+    .paths {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      width: 100%;
+      max-width: 800px;
+    }
+    
+    .path {
+      position: relative;
+      padding: 40px 32px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    
+    .path::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    
+    .path:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: transparent;
+    }
+    
+    .path:hover::before {
+      opacity: 1;
+    }
+    
+    .path-work::before { background: linear-gradient(135deg, rgba(255,107,74,0.15) 0%, transparent 60%); }
+    .path-work:hover { box-shadow: 0 20px 60px rgba(255,107,74,0.2), inset 0 0 0 1px var(--path-work); }
+    .path-work .path-icon { color: var(--path-work); }
+    
+    .path-learn::before { background: linear-gradient(135deg, rgba(74,224,255,0.15) 0%, transparent 60%); }
+    .path-learn:hover { box-shadow: 0 20px 60px rgba(74,224,255,0.2), inset 0 0 0 1px var(--path-learn); }
+    .path-learn .path-icon { color: var(--path-learn); }
+    
+    .path-think::before { background: linear-gradient(135deg, rgba(180,74,255,0.15) 0%, transparent 60%); }
+    .path-think:hover { box-shadow: 0 20px 60px rgba(180,74,255,0.2), inset 0 0 0 1px var(--path-think); }
+    .path-think .path-icon { color: var(--path-think); }
+    
+    .path-build::before { background: linear-gradient(135deg, rgba(74,255,145,0.15) 0%, transparent 60%); }
+    .path-build:hover { box-shadow: 0 20px 60px rgba(74,255,145,0.2), inset 0 0 0 1px var(--path-build); }
+    .path-build .path-icon { color: var(--path-build); }
+    
+    .path-icon {
+      font-size: 32px;
+      margin-bottom: 20px;
+      display: block;
+    }
+    
+    .path-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .path-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .path-arrow {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all 0.3s ease;
+    }
+    
+    .path:hover .path-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    /* Progress indicator */
+    .progress {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--surface);
+      padding: 10px 20px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .progress.active {
+      opacity: 1;
+    }
+    
+    .progress-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    
+    /* Content sections (hidden by default, shown on path selection) */
+    .content-section {
+      display: none;
+      animation: fadeIn 0.6s ease;
+    }
+    
+    .content-section.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .back-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .back-btn:hover {
+      background: var(--border);
+    }
+    
+    .section-title {
+      font-size: 28px;
+      font-weight: 600;
+    }
+    
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      transition: all 0.3s ease;
+    }
+    
+    .project-card:hover {
+      border-color: var(--path-work);
+      transform: translateY(-4px);
+    }
+    
+    .project-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--path-work);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    
+    .project-name {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .project-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    
+    .project-metrics {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .metric {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+    }
+    
+    .metric-value {
+      color: var(--text);
+      font-weight: 500;
+    }
+    
+    .metric-label {
+      color: var(--muted);
+      margin-left: 4px;
+    }
+    
+    /* Memory chip */
+    .memory-chip {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 280px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease;
+    }
+    
+    .memory-chip.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .memory-chip strong {
+      color: var(--text);
+    }
+    
+    /* Floating orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.3;
+      pointer-events: none;
+      animation: float 20s ease-in-out infinite;
+    }
+    
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--path-work);
+      top: -200px;
+      right: -100px;
+    }
+    
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--path-think);
+      bottom: -150px;
+      left: -100px;
+      animation-delay: -10s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(30px, 30px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  
+  <div class="progress" id="progress">
+    <span class="progress-dot" id="progress-dot"></span>
+    <span id="progress-text">Exploring: Work</span>
+  </div>
+  
+  <div class="container">
+    <div class="hero" id="hero">
+      <h1 class="question">What brought you here?</h1>
+      <p class="subtitle">CHOOSE YOUR PATH</p>
+      
+      <div class="paths">
+        <div class="path path-work" onclick="showSection('work')">
+          <span class="path-icon">◆</span>
+          <h2 class="path-title">Show me your best work</h2>
+          <p class="path-desc">See shipped products, real impact metrics, and the problems I've solved.</p>
+          <div class="path-arrow">→</div>
+        </div>
+        
+        <div class="path path-learn" onclick="showSection('learn')">
+          <span class="path-icon">◈</span>
+          <h2 class="path-title">Teach me something cool</h2>
+          <p class="path-desc">Quick lessons, frameworks, and insights I've picked up building products.</p>
+          <div class="path-arrow">→</div>
+        </div>
+        
+        <div class="path path-think" onclick="showSection('think')">
+          <span class="path-icon">◇</span>
+          <h2 class="path-title">How do you think?</h2>
+          <p class="path-desc">My process, principles, and the questions that drive my work.</p>
+          <div class="path-arrow">→</div>
+        </div>
+        
+        <div class="path path-build" onclick="showSection('build')">
+          <span class="path-icon">◎</span>
+          <h2 class="path-title">Let's build together</h2>
+          <p class="path-desc">Looking to collaborate? Here's how I work and what I bring.</p>
+          <div class="path-arrow">→</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Work Section -->
+    <div class="content-section" id="section-work">
+      <div class="section-header">
+        <button class="back-btn" onclick="showHero()">←</button>
+        <h2 class="section-title" style="color: var(--path-work)">Best Work</h2>
+      </div>
+      
+      <div class="project-grid">
+        <div class="project-card">
+          <div class="project-tag">Enterprise AI</div>
+          <h3 class="project-name">FDH GenAI Assistant</h3>
+          <p class="project-desc">Built an AI-powered insights engine for Walmart's $130B financial data platform. Executives now get answers in seconds, not days.</p>
+          <div class="project-metrics">
+            <div class="metric"><span class="metric-value">3x</span><span class="metric-label">faster insights</span></div>
+            <div class="metric"><span class="metric-value">$130B</span><span class="metric-label">data accessed</span></div>
+          </div>
+        </div>
+        
+        <div class="project-card">
+          <div class="project-tag">Personalization</div>
+          <h3 class="project-name">Gift Finder</h3>
+          <p class="project-desc">Designed a personalized gift recommendation engine for holiday shopping, turning browse sessions into conversions.</p>
+          <div class="project-metrics">
+            <div class="metric"><span class="metric-value">15%</span><span class="metric-label">conversion lift</span></div>
+            <div class="metric"><span class="metric-value">MVP</span><span class="metric-label">to pilot</span></div>
+          </div>
+        </div>
+        
+        <div class="project-card">
+          <div class="project-tag">EdTech</div>
+          <h3 class="project-name">Cuemath Learning Engine</h3>
+          <p class="project-desc">Adaptive math platform that meets students where they are. Reduced time-to-mastery by understanding learning patterns.</p>
+          <div class="project-metrics">
+            <div class="metric"><span class="metric-value">25%</span><span class="metric-label">faster mastery</span></div>
+            <div class="metric"><span class="metric-value">100K+</span><span class="metric-label">monthly users</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Learn Section -->
+    <div class="content-section" id="section-learn">
+      <div class="section-header">
+        <button class="back-btn" onclick="showHero()">←</button>
+        <h2 class="section-title" style="color: var(--path-learn)">Quick Lesson</h2>
+      </div>
+      
+      <div style="max-width: 640px;">
+        <h3 style="font-size: 24px; margin-bottom: 24px;">Why most dashboards fail</h3>
+        <p style="color: var(--muted); line-height: 1.8; margin-bottom: 20px;">
+          Most dashboards are built to show data. They should be built to enable decisions.
+        </p>
+        <p style="color: var(--muted); line-height: 1.8; margin-bottom: 20px;">
+          The difference? A data-display dashboard asks "what metrics exist?" A decision-enabling dashboard asks "what question is someone trying to answer?"
+        </p>
+        <div style="background: var(--surface); border-left: 3px solid var(--path-learn); padding: 20px 24px; margin: 30px 0;">
+          <strong style="display: block; margin-bottom: 8px;">The test:</strong>
+          <span style="color: var(--muted);">Can someone use your dashboard without training? If not, the dashboard is the problem.</span>
+        </div>
+        <p style="color: var(--muted); line-height: 1.8;">
+          When I rebuilt Walmart's finance dashboards, we cut metrics from 12 to 3. Result: 3x faster decisions. Less is more.
+        </p>
+      </div>
+    </div>
+    
+    <!-- Think Section -->
+    <div class="content-section" id="section-think">
+      <div class="section-header">
+        <button class="back-btn" onclick="showHero()">←</button>
+        <h2 class="section-title" style="color: var(--path-think)">How I Think</h2>
+      </div>
+      
+      <div style="display: grid; gap: 24px; max-width: 640px;">
+        <div style="padding: 24px; background: var(--surface); border-radius: 12px; border-left: 3px solid var(--path-think);">
+          <h4 style="margin-bottom: 8px;">Start with the decision, not the data</h4>
+          <p style="color: var(--muted); font-size: 14px;">Every feature should answer: "What will someone do differently because this exists?"</p>
+        </div>
+        <div style="padding: 24px; background: var(--surface); border-radius: 12px; border-left: 3px solid var(--path-think);">
+          <h4 style="margin-bottom: 8px;">Constraints are gifts</h4>
+          <p style="color: var(--muted); font-size: 14px;">The best solutions come from saying "no" to most options. I actively seek constraints.</p>
+        </div>
+        <div style="padding: 24px; background: var(--surface); border-radius: 12px; border-left: 3px solid var(--path-think);">
+          <h4 style="margin-bottom: 8px;">Ship to learn</h4>
+          <p style="color: var(--muted); font-size: 14px;">A mediocre thing in production teaches more than a perfect thing in Figma.</p>
+        </div>
+        <div style="padding: 24px; background: var(--surface); border-radius: 12px; border-left: 3px solid var(--path-think);">
+          <h4 style="margin-bottom: 8px;">Second-order thinking</h4>
+          <p style="color: var(--muted); font-size: 14px;">The interesting problems are always in the consequences of consequences.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Build Section -->
+    <div class="content-section" id="section-build">
+      <div class="section-header">
+        <button class="back-btn" onclick="showHero()">←</button>
+        <h2 class="section-title" style="color: var(--path-build)">Let's Build</h2>
+      </div>
+      
+      <div style="max-width: 640px;">
+        <p style="font-size: 20px; line-height: 1.6; margin-bottom: 32px;">
+          I'm a PM who codes, a strategist who ships, and a learner who teaches.
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 40px;">
+          <div style="padding: 20px; background: var(--surface); border-radius: 8px; text-align: center;">
+            <div style="font-size: 28px; font-weight: 600; color: var(--path-build);">6+</div>
+            <div style="font-size: 13px; color: var(--muted);">Years in Product</div>
+          </div>
+          <div style="padding: 20px; background: var(--surface); border-radius: 8px; text-align: center;">
+            <div style="font-size: 28px; font-weight: 600; color: var(--path-build);">$20B+</div>
+            <div style="font-size: 13px; color: var(--muted);">Decisions influenced</div>
+          </div>
+        </div>
+        <a href="mailto:dhruv@example.com" style="display: inline-flex; align-items: center; gap: 8px; background: var(--path-build); color: var(--bg); padding: 16px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+          Start a conversation →
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="memory-chip" id="memory">
+    <strong>Preference noted:</strong> You seem interested in systems thinking. Showing more systems-focused content.
+  </div>
+  
+  <script>
+    const hero = document.getElementById('hero');
+    const progress = document.getElementById('progress');
+    const progressDot = document.getElementById('progress-dot');
+    const progressText = document.getElementById('progress-text');
+    const memory = document.getElementById('memory');
+    
+    const colors = {
+      work: '#ff6b4a',
+      learn: '#4ae0ff',
+      think: '#b44aff',
+      build: '#4aff91'
+    };
+    
+    const labels = {
+      work: 'Work',
+      learn: 'Learning',
+      think: 'Thinking',
+      build: 'Collaboration'
+    };
+    
+    function showSection(section) {
+      hero.style.display = 'none';
+      document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+      document.getElementById('section-' + section).classList.add('active');
+      
+      progress.classList.add('active');
+      progressDot.style.background = colors[section];
+      progressText.textContent = 'Exploring: ' + labels[section];
+      
+      if (section === 'think') {
+        setTimeout(() => memory.classList.add('active'), 2000);
+      }
+    }
+    
+    function showHero() {
+      hero.style.display = 'flex';
+      document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+      progress.classList.remove('active');
+      memory.classList.remove('active');
+    }
+  </script>
+</body>
+</html>
+

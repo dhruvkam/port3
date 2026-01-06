@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Now / Next / Never | Dhruv Kamath</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #0f0f0f;
+      --white: #ffffff;
+      --gray: #888888;
+      --now: #22c55e;
+      --next: #3b82f6;
+      --never: #ef4444;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+    
+    /* Hero */
+    .hero {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 0;
+    }
+    
+    .hero-intro {
+      font-size: 14px;
+      color: var(--gray);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    
+    .hero-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 32px;
+    }
+    
+    .hero-tagline {
+      font-size: 20px;
+      color: var(--gray);
+      max-width: 500px;
+    }
+    
+    /* Three columns */
+    .columns {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin: 80px 0;
+    }
+    
+    .column {
+      padding: 40px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .column::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+    
+    .column-now::before { background: var(--now); }
+    .column-next::before { background: var(--next); }
+    .column-never::before { background: var(--never); }
+    
+    .column-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    
+    .column-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    
+    .column-now .column-dot { background: var(--now); box-shadow: 0 0 20px var(--now); }
+    .column-next .column-dot { background: var(--next); box-shadow: 0 0 20px var(--next); }
+    .column-never .column-dot { background: var(--never); }
+    
+    .column-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    
+    .column-list {
+      list-style: none;
+    }
+    
+    .column-list li {
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 15px;
+    }
+    
+    .column-list li:last-child {
+      border-bottom: none;
+    }
+    
+    .column-now .column-list li {
+      color: var(--white);
+    }
+    
+    .column-next .column-list li {
+      color: rgba(255,255,255,0.7);
+    }
+    
+    .column-never .column-list li {
+      color: rgba(255,255,255,0.5);
+    }
+    
+    .column-list .highlight {
+      color: var(--white);
+      font-weight: 500;
+    }
+    
+    /* Beliefs section */
+    .beliefs {
+      margin: 100px 0;
+      padding-top: 60px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 48px;
+    }
+    
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+    }
+    
+    .section-subtitle {
+      color: var(--gray);
+      font-size: 14px;
+    }
+    
+    .beliefs-grid {
+      display: grid;
+      gap: 24px;
+    }
+    
+    .belief {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      padding: 32px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+    
+    .belief:hover {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.1);
+    }
+    
+    .belief-statement {
+      font-size: 18px;
+      font-weight: 500;
+    }
+    
+    .belief-proof {
+      color: var(--gray);
+      font-size: 14px;
+      padding-left: 20px;
+      border-left: 2px solid rgba(255,255,255,0.1);
+    }
+    
+    .belief-proof strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+    
+    .belief-toggle {
+      display: inline-flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    
+    .toggle-btn {
+      font-size: 11px;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 100px;
+      background: transparent;
+      color: var(--gray);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .toggle-btn:hover {
+      border-color: var(--white);
+      color: var(--white);
+    }
+    
+    .toggle-btn.agree:hover {
+      border-color: var(--now);
+      color: var(--now);
+    }
+    
+    .toggle-btn.disagree:hover {
+      border-color: var(--never);
+      color: var(--never);
+    }
+    
+    /* Work section */
+    .work {
+      margin: 100px 0;
+      padding-top: 60px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    
+    .work-card {
+      padding: 32px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .work-card:hover {
+      background: rgba(255,255,255,0.02);
+      transform: translateY(-4px);
+    }
+    
+    .work-company {
+      font-size: 12px;
+      color: var(--gray);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    
+    .work-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    
+    .work-impact {
+      display: inline-block;
+      font-size: 13px;
+      padding: 6px 12px;
+      background: rgba(34,197,94,0.1);
+      color: var(--now);
+      border-radius: 6px;
+    }
+    
+    /* Learning log */
+    .learning {
+      margin: 100px 0;
+      padding-top: 60px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .learning-list {
+      list-style: none;
+    }
+    
+    .learning-item {
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      gap: 24px;
+      align-items: baseline;
+    }
+    
+    .learning-date {
+      font-size: 12px;
+      color: var(--gray);
+    }
+    
+    .learning-text {
+      font-size: 15px;
+    }
+    
+    .learning-link {
+      font-size: 13px;
+      color: var(--next);
+      text-decoration: none;
+    }
+    
+    .learning-link:hover {
+      text-decoration: underline;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 100px;
+      padding: 60px 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .footer-text {
+      color: var(--gray);
+      font-size: 14px;
+    }
+    
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+    
+    .footer-links a {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    
+    .footer-links a:hover {
+      color: var(--white);
+    }
+    
+    /* Responsive */
+    @media (max-width: 900px) {
+      .columns {
+        grid-template-columns: 1fr;
+      }
+      
+      .belief {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <p class="hero-intro">Product Manager</p>
+      <h1 class="hero-name">Dhruv Kamath</h1>
+      <p class="hero-tagline">I build things by chasing good questions. I care about clarity, leverage, and humane systems.</p>
+    </header>
+    
+    <section class="columns">
+      <div class="column column-now">
+        <div class="column-header">
+          <div class="column-dot"></div>
+          <h2 class="column-title">Now</h2>
+        </div>
+        <ul class="column-list">
+          <li>Leading <span class="highlight">GenAI platform products</span> at Walmart Finance</li>
+          <li>Building conversational interfaces for <span class="highlight">$130B</span> in data</li>
+          <li>Exploring how AI can be a <span class="highlight">thought partner</span>, not just a tool</li>
+        </ul>
+      </div>
+      
+      <div class="column column-next">
+        <div class="column-header">
+          <div class="column-dot"></div>
+          <h2 class="column-title">Next</h2>
+        </div>
+        <ul class="column-list">
+          <li>AI systems that learn user intent over time</li>
+          <li>Products that <span class="highlight">reduce decisions</span> rather than add them</li>
+          <li>Teaching what I've learned about building at scale</li>
+        </ul>
+      </div>
+      
+      <div class="column column-never">
+        <div class="column-header">
+          <div class="column-dot"></div>
+          <h2 class="column-title">Never</h2>
+        </div>
+        <ul class="column-list">
+          <li>Building features without understanding the <span class="highlight">decision</span> they enable</li>
+          <li>Dark patterns or manipulative UX</li>
+          <li>Shipping metrics dashboards that require training</li>
+          <li>Adding complexity when simplicity works</li>
+        </ul>
+      </div>
+    </section>
+    
+    <section class="beliefs">
+      <div class="section-header">
+        <h2 class="section-title">Beliefs I build by</h2>
+        <span class="section-subtitle">With receipts</span>
+      </div>
+      
+      <div class="beliefs-grid">
+        <div class="belief">
+          <div class="belief-statement">
+            The best interfaces disappear
+            <div class="belief-toggle">
+              <button class="toggle-btn agree">Agree →</button>
+              <button class="toggle-btn disagree">Push back</button>
+            </div>
+          </div>
+          <div class="belief-proof">
+            <strong>Proof:</strong> Cut Walmart's finance dashboard from 12 metrics to 3. Time-to-insight improved 3x. Users stopped "using" the dashboard—they just got answers.
+          </div>
+        </div>
+        
+        <div class="belief">
+          <div class="belief-statement">
+            Constraints are gifts, not obstacles
+            <div class="belief-toggle">
+              <button class="toggle-btn agree">Agree →</button>
+              <button class="toggle-btn disagree">Push back</button>
+            </div>
+          </div>
+          <div class="belief-proof">
+            <strong>Proof:</strong> At Sandbox AQ, shipped a quantum security tool in 2 months by saying "no" to 80% of requested features. The constraint forced clarity.
+          </div>
+        </div>
+        
+        <div class="belief">
+          <div class="belief-statement">
+            Ship to learn, not to impress
+            <div class="belief-toggle">
+              <button class="toggle-btn agree">Agree →</button>
+              <button class="toggle-btn disagree">Push back</button>
+            </div>
+          </div>
+          <div class="belief-proof">
+            <strong>Proof:</strong> Cuemath's adaptive engine started as a spreadsheet prototype. Users testing the ugly version taught us more than 3 months of design reviews.
+          </div>
+        </div>
+        
+        <div class="belief">
+          <div class="belief-statement">
+            Second-order effects matter more than first
+            <div class="belief-toggle">
+              <button class="toggle-btn agree">Agree →</button>
+              <button class="toggle-btn disagree">Push back</button>
+            </div>
+          </div>
+          <div class="belief-proof">
+            <strong>Proof:</strong> Gift Finder's first-order metric was conversion. Second-order: reduced returns by 20% because people bought things recipients actually wanted.
+          </div>
+        </div>
+        
+        <div class="belief">
+          <div class="belief-statement">
+            Watch behavior, ignore opinions
+            <div class="belief-toggle">
+              <button class="toggle-btn agree">Agree →</button>
+              <button class="toggle-btn disagree">Push back</button>
+            </div>
+          </div>
+          <div class="belief-proof">
+            <strong>Proof:</strong> Users said they wanted more dashboard filters. Shadowing showed they used 2 of 15. We removed 13 filters. Complaints: zero. Usage: up 40%.
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section class="work">
+      <div class="section-header">
+        <h2 class="section-title">Best-of work</h2>
+        <span class="section-subtitle">Not everything—just what mattered</span>
+      </div>
+      
+      <div class="work-grid">
+        <div class="work-card">
+          <p class="work-company">Walmart</p>
+          <h3 class="work-title">FDH GenAI Assistant</h3>
+          <span class="work-impact">3x faster insights</span>
+        </div>
+        
+        <div class="work-card">
+          <p class="work-company">Walmart</p>
+          <h3 class="work-title">Personalized Gift Finder</h3>
+          <span class="work-impact">15% conversion lift</span>
+        </div>
+        
+        <div class="work-card">
+          <p class="work-company">Cuemath</p>
+          <h3 class="work-title">Adaptive Learning Engine</h3>
+          <span class="work-impact">25% faster mastery</span>
+        </div>
+        
+        <div class="work-card">
+          <p class="work-company">Sandbox AQ</p>
+          <h3 class="work-title">Quantum Security Tool</h3>
+          <span class="work-impact">2-month ship</span>
+        </div>
+      </div>
+    </section>
+    
+    <section class="learning">
+      <div class="section-header">
+        <h2 class="section-title">Learning log</h2>
+        <span class="section-subtitle">What I'm reading and thinking about</span>
+      </div>
+      
+      <ul class="learning-list">
+        <li class="learning-item">
+          <span class="learning-date">Jan 2026</span>
+          <span class="learning-text">The best AI interfaces feel like talking to a smart colleague, not querying a database</span>
+          <a href="#" class="learning-link">Note →</a>
+        </li>
+        <li class="learning-item">
+          <span class="learning-date">Dec 2025</span>
+          <span class="learning-text">Why "user-friendly" is the wrong goal—aim for "decision-enabling" instead</span>
+          <a href="#" class="learning-link">Essay →</a>
+        </li>
+        <li class="learning-item">
+          <span class="learning-date">Nov 2025</span>
+          <span class="learning-text">Re-reading "Thinking in Systems" by Donella Meadows</span>
+          <a href="#" class="learning-link">Notes →</a>
+        </li>
+        <li class="learning-item">
+          <span class="learning-date">Oct 2025</span>
+          <span class="learning-text">Conversation design patterns that actually reduce user effort</span>
+          <a href="#" class="learning-link">Thread →</a>
+        </li>
+      </ul>
+    </section>
+    
+    <footer>
+      <p class="footer-text">© 2026 Dhruv Kamath</p>
+      <div class="footer-links">
+        <a href="mailto:dhruv@example.com">Email</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">GitHub</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
+

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mind Map | Dhruv Kamath</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --node-decision: #f85149;
+      --node-craft: #58a6ff;
+      --node-narrative: #a371f7;
+      --node-play: #3fb950;
+      --node-teaching: #f0883e;
+      --node-performance: #db61a2;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    
+    .app {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      height: 100vh;
+    }
+    
+    /* Map Canvas */
+    .map-container {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .map-canvas {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    
+    /* Connection lines */
+    .connections {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    
+    .connections svg {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .connection-line {
+      stroke: var(--border);
+      stroke-width: 1;
+      fill: none;
+      opacity: 0.4;
+    }
+    
+    .connection-line.active {
+      stroke: var(--text);
+      opacity: 0.6;
+      stroke-width: 2;
+    }
+    
+    /* Nodes */
+    .node {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    
+    .node:hover {
+      transform: scale(1.1);
+    }
+    
+    .node.active {
+      transform: scale(1.15);
+    }
+    
+    .node-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .node-circle::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px solid currentColor;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .node:hover .node-circle::before,
+    .node.active .node-circle::before {
+      opacity: 1;
+      inset: -8px;
+    }
+    
+    .node-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color 0.3s ease;
+    }
+    
+    .node:hover .node-label,
+    .node.active .node-label {
+      color: var(--text);
+    }
+    
+    /* Node colors */
+    .node-decision .node-circle { background: rgba(248,81,73,0.15); color: var(--node-decision); }
+    .node-craft .node-circle { background: rgba(88,166,255,0.15); color: var(--node-craft); }
+    .node-narrative .node-circle { background: rgba(163,113,247,0.15); color: var(--node-narrative); }
+    .node-play .node-circle { background: rgba(63,185,80,0.15); color: var(--node-play); }
+    .node-teaching .node-circle { background: rgba(240,136,62,0.15); color: var(--node-teaching); }
+    .node-performance .node-circle { background: rgba(219,97,162,0.15); color: var(--node-performance); }
+    
+    /* Side Panel */
+    .panel {
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .panel-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .panel-title {
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    
+    .panel-name {
+      font-size: 24px;
+      font-weight: 600;
+    }
+    
+    .panel-content {
+      flex: 1;
+      padding: 24px;
+    }
+    
+    .panel-section {
+      margin-bottom: 32px;
+    }
+    
+    .panel-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    
+    .related-item {
+      padding: 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .related-item:hover {
+      border-color: var(--text);
+      transform: translateX(4px);
+    }
+    
+    .related-item-title {
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    
+    .related-item-meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    
+    .related-item-tags {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    
+    .tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      padding: 4px 8px;
+      background: var(--surface);
+      border-radius: 4px;
+      color: var(--muted);
+    }
+    
+    /* Routes */
+    .routes {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .route {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .route:hover {
+      border-color: var(--text);
+    }
+    
+    .route-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    
+    .route-outcomes .route-icon { background: rgba(248,81,73,0.15); }
+    .route-process .route-icon { background: rgba(88,166,255,0.15); }
+    .route-weird .route-icon { background: rgba(163,113,247,0.15); }
+    
+    .route-label {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    /* Impact tokens */
+    .tokens {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .token {
+      padding: 8px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    
+    .token-value {
+      font-weight: 600;
+      color: var(--node-decision);
+    }
+    
+    /* Random button */
+    .random-btn {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      padding: 12px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    
+    .random-btn:hover {
+      background: var(--border);
+    }
+    
+    /* Controls */
+    .controls {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      display: flex;
+      gap: 8px;
+    }
+    
+    .control-btn {
+      width: 40px;
+      height: 40px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    
+    .control-btn:hover {
+      color: var(--text);
+      border-color: var(--text);
+    }
+    
+    /* Toggle connections */
+    .toggle-connections {
+      position: fixed;
+      top: 24px;
+      left: 100px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      padding: 10px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .toggle-connections:hover,
+    .toggle-connections.active {
+      color: var(--text);
+      border-color: var(--text);
+    }
+    
+    /* Animated pulse */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.5); opacity: 0; }
+    }
+    
+    .node-circle::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0;
+    }
+    
+    .node.active .node-circle::after {
+      animation: pulse 2s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="map-container">
+      <div class="map-canvas" id="canvas">
+        <svg class="connections" id="connections">
+          <line class="connection-line" x1="50%" y1="50%" x2="25%" y2="30%" />
+          <line class="connection-line" x1="50%" y1="50%" x2="75%" y2="25%" />
+          <line class="connection-line" x1="50%" y1="50%" x2="80%" y2="60%" />
+          <line class="connection-line" x1="50%" y1="50%" x2="20%" y2="70%" />
+          <line class="connection-line" x1="50%" y1="50%" x2="60%" y2="80%" />
+          <line class="connection-line" x1="25%" y1="30%" x2="75%" y2="25%" />
+          <line class="connection-line" x1="20%" y1="70%" x2="60%" y2="80%" />
+        </svg>
+        
+        <!-- Center node -->
+        <div class="node node-decision active" style="left: 50%; top: 50%; transform: translate(-50%, -50%);" onclick="selectNode(this, 'decision')">
+          <div class="node-circle">⚡</div>
+          <span class="node-label">Decision-making</span>
+        </div>
+        
+        <!-- Surrounding nodes -->
+        <div class="node node-craft" style="left: 25%; top: 30%;" onclick="selectNode(this, 'craft')">
+          <div class="node-circle">🔧</div>
+          <span class="node-label">Craft</span>
+        </div>
+        
+        <div class="node node-narrative" style="left: 75%; top: 25%;" onclick="selectNode(this, 'narrative')">
+          <div class="node-circle">📖</div>
+          <span class="node-label">Narrative</span>
+        </div>
+        
+        <div class="node node-performance" style="left: 80%; top: 60%;" onclick="selectNode(this, 'performance')">
+          <div class="node-circle">📈</div>
+          <span class="node-label">Performance</span>
+        </div>
+        
+        <div class="node node-play" style="left: 20%; top: 70%;" onclick="selectNode(this, 'play')">
+          <div class="node-circle">🎮</div>
+          <span class="node-label">Play</span>
+        </div>
+        
+        <div class="node node-teaching" style="left: 60%; top: 80%;" onclick="selectNode(this, 'teaching')">
+          <div class="node-circle">💡</div>
+          <span class="node-label">Teaching</span>
+        </div>
+      </div>
+      
+      <div class="controls">
+        <button class="control-btn" title="Zoom in">+</button>
+        <button class="control-btn" title="Zoom out">−</button>
+      </div>
+      
+      <button class="toggle-connections" onclick="this.classList.toggle('active')">
+        Show connections
+      </button>
+      
+      <button class="random-btn" onclick="randomNode()">
+        🎲 Random node
+      </button>
+    </div>
+    
+    <aside class="panel">
+      <div class="routes">
+        <div class="panel-title">Suggested Routes</div>
+        <div class="route route-outcomes">
+          <div class="route-icon">🎯</div>
+          <span class="route-label">Start with outcomes</span>
+        </div>
+        <div class="route route-process">
+          <div class="route-icon">🔄</div>
+          <span class="route-label">Start with process</span>
+        </div>
+        <div class="route route-weird">
+          <div class="route-icon">🌀</div>
+          <span class="route-label">Start with experiments</span>
+        </div>
+      </div>
+      
+      <div class="panel-header">
+        <div class="panel-title">Currently Exploring</div>
+        <h2 class="panel-name" id="panel-name">Decision-making</h2>
+      </div>
+      
+      <div class="panel-content">
+        <div class="panel-section">
+          <div class="panel-section-title">Related Projects</div>
+          
+          <div class="related-item">
+            <div class="related-item-title">FDH GenAI Assistant</div>
+            <div class="related-item-meta">Walmart • 2024</div>
+            <div class="related-item-tags">
+              <span class="tag">Enterprise AI</span>
+              <span class="tag">Data Platform</span>
+            </div>
+          </div>
+          
+          <div class="related-item">
+            <div class="related-item-title">Finance Dashboards</div>
+            <div class="related-item-meta">Walmart • 2023</div>
+            <div class="related-item-tags">
+              <span class="tag">Data Viz</span>
+              <span class="tag">UX</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="panel-section">
+          <div class="panel-section-title">Related Writing</div>
+          
+          <div class="related-item">
+            <div class="related-item-title">Why dashboards fail</div>
+            <div class="related-item-meta">Essay • 5 min read</div>
+          </div>
+          
+          <div class="related-item">
+            <div class="related-item-title">Decision velocity in orgs</div>
+            <div class="related-item-meta">Note • 2 min read</div>
+          </div>
+        </div>
+        
+        <div class="panel-section">
+          <div class="panel-section-title">Proof of Work</div>
+          <div class="tokens">
+            <div class="token"><span class="token-value">3x</span> faster insights</div>
+            <div class="token"><span class="token-value">$130B</span> data platform</div>
+            <div class="token"><span class="token-value">$20B</span> decisions</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+  
+  <script>
+    const nodeData = {
+      decision: { name: 'Decision-making', emoji: '⚡' },
+      craft: { name: 'Craft', emoji: '🔧' },
+      narrative: { name: 'Narrative', emoji: '📖' },
+      performance: { name: 'Performance', emoji: '📈' },
+      play: { name: 'Play', emoji: '🎮' },
+      teaching: { name: 'Teaching', emoji: '💡' }
+    };
+    
+    const nodes = ['decision', 'craft', 'narrative', 'performance', 'play', 'teaching'];
+    
+    function selectNode(el, nodeId) {
+      document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('panel-name').textContent = nodeData[nodeId].name;
+    }
+    
+    function randomNode() {
+      const randomId = nodes[Math.floor(Math.random() * nodes.length)];
+      const nodeEl = document.querySelector(`.node-${randomId}`);
+      selectNode(nodeEl, randomId);
+    }
+  </script>
+</body>
+</html>
+

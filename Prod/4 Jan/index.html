@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Explorations | Jan 4, 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09090b;
+      --surface: #18181b;
+      --border: #27272a;
+      --text: #fafafa;
+      --muted: #a1a1aa;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 60px 40px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    header {
+      margin-bottom: 60px;
+    }
+    
+    .date {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    
+    h1 {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    
+    .subtitle {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 600px;
+      line-height: 1.6;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+    }
+    
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: transparent;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    
+    .card:hover::before {
+      opacity: 1;
+    }
+    
+    .card-1::before { background: linear-gradient(90deg, #c4540a, #e8d5a3); }
+    .card-2::before { background: linear-gradient(90deg, #ff6b4a, #4ae0ff); }
+    .card-3::before { background: linear-gradient(90deg, #c9a227, #8b4513); }
+    .card-4::before { background: linear-gradient(90deg, #f85149, #58a6ff); }
+    .card-5::before { background: linear-gradient(90deg, #ea580c, #fef3c7); }
+    .card-6::before { background: linear-gradient(90deg, #b45309, #4d7c5a); }
+    .card-7::before { background: linear-gradient(90deg, #22c55e, #ef4444); }
+    .card-8::before { background: linear-gradient(90deg, #6366f1, #a855f7); }
+    
+    .card-number {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    
+    .card-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    
+    .card-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .tag {
+      font-size: 11px;
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 100px;
+      color: var(--muted);
+    }
+    
+    .card-arrow {
+      position: absolute;
+      bottom: 32px;
+      right: 32px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover .card-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    footer {
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <p class="date">January 4, 2026</p>
+      <h1>Portfolio Explorations</h1>
+      <p class="subtitle">Eight different approaches to presenting your work, thinking, and process. Each commits to a unique metaphor and interaction pattern.</p>
+    </header>
+    
+    <div class="grid">
+      <a href="01-field-notes.html" class="card card-1">
+        <div class="card-number">01</div>
+        <h2 class="card-title">Field Notes</h2>
+        <p class="card-desc">Your work as an explorer's notebook—observations, experiments, and conclusions. Hover reveals margin notes.</p>
+        <div class="card-tags">
+          <span class="tag">Paper texture</span>
+          <span class="tag">Hand-drawn</span>
+          <span class="tag">Scholarly</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+      
+      <a href="02-choose-adventure.html" class="card card-2">
+        <div class="card-number">02</div>
+        <h2 class="card-title">Choose Your Adventure</h2>
+        <p class="card-desc">The visitor decides: work, learning, thinking, or collaboration. Four paths, one site.</p>
+        <div class="card-tags">
+          <span class="tag">Dark mode</span>
+          <span class="tag">Interactive</span>
+          <span class="tag">Branching</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+      
+      <a href="03-museum-exhibit.html" class="card card-3">
+        <div class="card-number">03</div>
+        <h2 class="card-title">Museum Exhibit</h2>
+        <p class="card-desc">A curated gallery of artifacts with curator notes. "Behind the glass" reveals process and mistakes.</p>
+        <div class="card-tags">
+          <span class="tag">Elegant</span>
+          <span class="tag">Gallery</span>
+          <span class="tag">Curated</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+      
+      <a href="04-living-systems-map.html" class="card card-4">
+        <div class="card-number">04</div>
+        <h2 class="card-title">Living Systems Map</h2>
+        <p class="card-desc">Your brain as a graph of connected ideas. Navigate by concepts, not pages.</p>
+        <div class="card-tags">
+          <span class="tag">Node graph</span>
+          <span class="tag">Connections</span>
+          <span class="tag">Spatial</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+      
+      <a href="05-micro-lesson.html" class="card card-5">
+        <div class="card-number">05</div>
+        <h2 class="card-title">Micro-Lesson First</h2>
+        <p class="card-desc">The homepage teaches something useful. Visitors leave smarter, and the site becomes memorable.</p>
+        <div class="card-tags">
+          <span class="tag">Educational</span>
+          <span class="tag">Interactive slider</span>
+          <span class="tag">Warm</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+      
+      <a href="06-recipe-book.html" class="card card-6">
+        <div class="card-number">06</div>
+        <h2 class="card-title">Recipe Book</h2>
+        <p class="card-desc">Your process as recipes: ingredients, steps, and outputs. Communicates competence without bragging.</p>
+        <div class="card-tags">
+          <span class="tag">Cookbook</span>
+          <span class="tag">Process-focused</span>
+          <span class="tag">Playful</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+      
+      <a href="07-now-next-never.html" class="card card-7">
+        <div class="card-number">07</div>
+        <h2 class="card-title">Now / Next / Never</h2>
+        <p class="card-desc">Radical clarity and taste. Three columns that communicate what you do, want to do, and refuse to do.</p>
+        <div class="card-tags">
+          <span class="tag">Bold</span>
+          <span class="tag">Opinionated</span>
+          <span class="tag">Minimal</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+      
+      <a href="08-conversation.html" class="card card-8">
+        <div class="card-number">08</div>
+        <h2 class="card-title">Conversation With You</h2>
+        <p class="card-desc">A chat interface instead of a presentation. Human, playful, and aligned with educating the visitor.</p>
+        <div class="card-tags">
+          <span class="tag">Chat UI</span>
+          <span class="tag">Dialogue</span>
+          <span class="tag">Modern</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+    </div>
+    
+    <footer>
+      <p>Pick a direction. Mix and match. The strongest portfolios commit to one metaphor.</p>
+    </footer>
+  </div>
+</body>
+</html>
+
